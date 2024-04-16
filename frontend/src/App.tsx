@@ -1,5 +1,13 @@
+import { Routes, Route } from "react-router-dom";
+
+import HomeScreen from "./screen/Home";
+
 function App() {
-  return <h1>React TypeScript Template by Vite</h1>;
+  return (
+    <Routes>
+      <Route path="/" element={<HomeScreen />} />
+    </Routes>
+  );
 }
 
 export default App;
