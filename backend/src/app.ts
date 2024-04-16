@@ -4,6 +4,7 @@ import { config } from "dotenv";
 import bodyParser from "body-parser";
 import morgan from "morgan";
 import type { Request, Response, NextFunction } from "express";
+import cors from "cors";
 
 import connectToDB from "./config/db";
 import { logger } from "./utils/logger";
@@ -20,6 +21,12 @@ app.use(
   })
 );
 app.use(morgan("tiny"));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+  })
+);
 
 const port = process.env.PORT ?? 9000;
 
