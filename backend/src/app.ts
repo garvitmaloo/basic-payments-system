@@ -10,6 +10,7 @@ import connectToDB from "./config/db";
 import { logger } from "./utils/logger";
 import { handleErrors } from "./middleware/handleErrors";
 import { productRoutes } from "./routes/products";
+import { ordersRoutes } from "./routes/orders";
 
 const app = express();
 config();
@@ -33,6 +34,7 @@ const port = process.env.PORT ?? 9000;
 
 // APP ROUTES
 app.use("/api/products", productRoutes);
+app.use("/api/orders", ordersRoutes);
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   handleErrors(error, req, res, next);
