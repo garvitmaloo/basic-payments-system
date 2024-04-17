@@ -23,6 +23,13 @@ const HomeScreen = () => {
 
     fetchAllProducts();
   }, []);
+
+  const handleOnClick = (product: IProduct) => {
+    navigate("/cart", {
+      state: product,
+    });
+  };
+
   return (
     <div style={{ padding: "1rem" }}>
       <PageHeading text="All Products" />
@@ -39,7 +46,12 @@ const HomeScreen = () => {
               />
               <h3>{product.name}</h3>
               <p>{product.price}</p>
-              <button style={{ padding: "5px" }}>Buy Now</button>
+              <button
+                style={{ padding: "5px" }}
+                onClick={() => handleOnClick(product)}
+              >
+                Buy Now
+              </button>
             </>
           </VerticalCard>
         ))}
