@@ -1,9 +1,10 @@
 import { useLocation } from "react-router-dom";
+import axios from "axios";
 
-import { IProduct } from "../../types";
+import loadRazorpayScript from "../../utils/razorpay/loadScript";
+import { IProduct, IRazorpayOrder } from "../../types";
 import PageHeading from "../../components/pageHeading";
 import VerticalCard from "../../components/VerticalCard";
-import axios from "axios";
 
 const Cart = () => {
   const location = useLocation();
@@ -11,7 +12,17 @@ const Cart = () => {
 
   const handleOnClick = async () => {
     try {
-      const { data } = await axios.post(
+      const hasScriptLoaded = await loadRazorpayScript();
+
+      if (!hasScriptLoaded) {
+        throw new Error(
+          "Something went wrong; Failed to load razorpay on client."
+        );
+      }
+
+      const {
+        data: { amount, order_id, currency },
+      }: { data: IRazorpayOrder } = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/orders`,
         {
           orderDetails: {
@@ -21,7 +32,39 @@ const Cart = () => {
           },
         }
       );
-      console.log("DATA = ", data);
+
+      const rzaorpayOptions = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        order_id,
+        amount,
+        currency,
+        name: "My Own Shop",
+        prefill: {
+          name: "Garvit Test",
+          email: "garvit@example.com",
+          contact: "1234567890",
+        },
+        theme: {
+          color: "#61dafb",
+        },
+        handler: async (response: any) => {
+          const data = {
+            orderCreationId: order_id,
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpayOrderId: response.razorpay_order_id,
+            razorpaySignature: response.razorpay_signature,
+          };
+
+          const res = await axios.post(
+            `${import.meta.env.VITE_BACKEND_URL}/payments/verify`,
+            data
+          );
+          console.log("RES = ", res.data);
+        },
+      };
+
+      const paymentWindow = new window.Razorpay(rzaorpayOptions);
+      paymentWindow.open();
     } catch (err) {
       console.error(err);
     }
