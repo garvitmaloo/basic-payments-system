@@ -21,7 +21,7 @@ const createNewOrder = async (
     });
 
     const order = new Order({
-      amount: amount * 100,
+      amount,
       products: productIds,
       razorpayOrderId: razorpayOrder.id
     });

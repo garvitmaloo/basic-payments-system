@@ -12,13 +12,15 @@ const postVerifyPaymentController = async (
     orderCreationId,
     razorpayPaymentId,
     razorpayOrderId,
-    razorpaySignature
+    razorpaySignature,
+    id
   }: IPaymentDetails = req.body;
-  const isPaymentVerificationSuccessful = verifyPayment(
+  const isPaymentVerificationSuccessful = await verifyPayment(
     razorpaySignature,
     orderCreationId,
     razorpayPaymentId,
-    razorpayOrderId
+    razorpayOrderId,
+    id
   );
 
   if (!isPaymentVerificationSuccessful) {

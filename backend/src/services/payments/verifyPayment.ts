@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 
 import Payment from "../../models/Payment";
 import { PAYMENT_STATUS } from "../../utils/constants";
+import updateOrderById from "../orders/updateOrderById";
 
 config();
 
@@ -11,10 +12,11 @@ const verifyPayment = async (
   razorpaySignature: string,
   orderCreationId: string,
   razorpayPaymentId: string,
-  razorpayOrderId: string
+  razorpayOrderId: string,
+  id: string
 ): Promise<boolean> => {
   const paymentDetails = new Payment({
-    orderId: new mongoose.Schema.Types.ObjectId(orderCreationId),
+    orderId: new mongoose.Types.ObjectId(id),
     razorpayPaymentId,
     razorpayOrderId
   });
@@ -28,10 +30,16 @@ const verifyPayment = async (
   if (digest === razorpaySignature) {
     paymentDetails.paymentStatus = PAYMENT_STATUS.VERIFIED;
     await paymentDetails.save();
+    await updateOrderById(id, {
+      $set: { paymentStatus: PAYMENT_STATUS.VERIFIED }
+    });
     return true;
   }
 
   await paymentDetails.save();
+  await updateOrderById(id, {
+    $set: { paymentStatus: PAYMENT_STATUS.SUCCESS }
+  });
   return false;
 };
 

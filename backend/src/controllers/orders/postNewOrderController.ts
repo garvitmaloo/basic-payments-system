@@ -21,7 +21,8 @@ const postNewOrderController = async (
   const orderResponse = {
     amount: response.result!.amount,
     order_id: response.result!.razorpayOrderId,
-    currency: response.result!.currency
+    currency: response.result!.currency,
+    id: response.result?._id
   };
 
   res.status(201).json(orderResponse);

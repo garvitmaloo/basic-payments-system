@@ -34,4 +34,5 @@ export interface IPaymentDetails {
   razorpayOrderId: string;
   razorpayPaymentId: string;
   razorpaySignature: string;
+  id: string;
 }
