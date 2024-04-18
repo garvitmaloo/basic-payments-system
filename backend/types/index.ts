@@ -28,3 +28,10 @@ export interface IOrder extends Document {
   paymentStatus: string;
   razorpayOrderId?: string | null | undefined;
 }
+
+export interface IPaymentDetails {
+  orderCreationId: string;
+  razorpayOrderId: string;
+  razorpayPaymentId: string;
+  razorpaySignature: string;
+}
