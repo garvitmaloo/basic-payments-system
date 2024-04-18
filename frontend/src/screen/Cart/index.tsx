@@ -21,7 +21,7 @@ const Cart = () => {
       }
 
       const {
-        data: { amount, order_id, currency },
+        data: { amount, order_id, currency, id },
       }: { data: IRazorpayOrder } = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/orders`,
         {
@@ -53,6 +53,7 @@ const Cart = () => {
             razorpayPaymentId: response.razorpay_payment_id,
             razorpayOrderId: response.razorpay_order_id,
             razorpaySignature: response.razorpay_signature,
+            id,
           };
 
           const res = await axios.post(

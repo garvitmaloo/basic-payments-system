@@ -9,4 +9,5 @@ export type IRazorpayOrder = {
   order_id: string;
   amount: number;
   currency: string;
+  id: string;
 };
