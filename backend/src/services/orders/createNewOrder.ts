@@ -11,7 +11,7 @@ const createNewOrder = async (
   try {
     const { amount, currency, products } = orderDetails;
     const razorpayOrder = await razorpay.orders.create({
-      amount,
+      amount: amount * 100,
       currency
     });
 
@@ -21,7 +21,7 @@ const createNewOrder = async (
     });
 
     const order = new Order({
-      amount,
+      amount: amount * 100,
       products: productIds,
       razorpayOrderId: razorpayOrder.id
     });
